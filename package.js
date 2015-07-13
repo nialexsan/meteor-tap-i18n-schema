@@ -1,6 +1,6 @@
 Package.describe({
   name: 'ansyg:tap-i18n-schema',
-  version: '0.1.2',
+  version: '0.1.3',
   summary: 'Simple solution to join tap:i18n-db and aldeed:collection2',
   git: 'https://github.com/andrew-sygyda/meteor-tap-i18n-schema',
   documentation: 'README.md'
@@ -15,10 +15,11 @@ Package.onUse(function (api) {
     'check@1.0.0',
     'tap:i18n@1.4.1',
     'tap:i18n-db@0.4.0',
-    'aldeed:collection2@2.3.2'
+    'aldeed:collection2@2.3.2',
+    'stevezhu:lodash@3.9.3'
   ], both);
 
-  api.addFiles('ansyg:tap-i18n-schema.js', both);
+  api.addFiles('tap-i18n-schema.js', both);
 });
 
 Package.onTest(function (api) {
@@ -32,5 +33,5 @@ Package.onTest(function (api) {
 
   api.use('ansyg:tap-i18n-schema');
 
-  api.addFiles('ansyg:tap-i18n-schema-tests.js');
+  api.addFiles('tap-i18n-schema-tests.js');
 });

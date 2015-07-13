@@ -4,14 +4,18 @@ SimpleSchema.extendOptions({
   i18n: Match.Optional(Boolean)
 });
 
+function clone (obj) {
+  return lodash.clone(obj, true);
+}
+
 var originAttachSchema = Mongo.Collection.prototype.attachSchema,
   originCollection = TAPi18n.Collection,
   i18nCollection = function (name, options) {
     var collection = originCollection(name, options);
 
-    if (Meteor.isClient && ((Package["yogiben:admin"] != null) || (Package["ansyg:i18n-admin"] != null))) {
-      collection._disableTransformationOnRoute(/^\/admin(\/?$|\/)/);
-    }
+    // if (Meteor.isClient && ((Package["yogiben:admin"] != null) || (Package["ansyg:i18n-admin"] != null))) {
+    //   collection._disableTransformationOnRoute(/^\/admin(\/?$|\/)/);
+    // }
 
     if (options && !options.languages) {
       options.languages = [ 'en' ];
@@ -19,7 +23,7 @@ var originAttachSchema = Mongo.Collection.prototype.attachSchema,
 
     collection._languages = options.languages;
     collection.attachI18nSchema = function (ss, opts) {
-      var langs, i18nSchema = _.extend({}, ss);
+      var langs, i18nSchema = lodash.extend({}, ss);
       if (typeof ss !== 'object') {
         throw new Meteor.Error('schema-error',
           'Please check your schema pass to attachI18nSchema');
@@ -31,16 +35,22 @@ var originAttachSchema = Mongo.Collection.prototype.attachSchema,
         return originAttachSchema.call(this, ss, opts);
       }
 
-      _.each(i18nSchema, function (field, key) {
-        if (!field['i18n']) return;
+      lodash.each(i18nSchema, function (field, key) {
+        if (!field.i18n) return;
 
-        _.each(langs, function (lang, index) {
-          i18nSchema['i18n.' + lang + '.' + key] = _.extend({}, field, {
-            optional: true
-          });
+        var origField = clone(field);
 
-          delete i18nSchema[key];
+        lodash.each(langs, function (lang, index) {
+          i18nSchema[key + '.' + lang] = clone(origField);
         });
+
+        field.label = ' ';
+        field.type = Object;
+        field.optional = origField.optional || false;
+        delete field.autoform;
+        field.autoform = {
+          type: 'i18nObject'
+        };
       });
 
       return originAttachSchema.call(this, i18nSchema, opts);
