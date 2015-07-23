@@ -1,7 +1,8 @@
 'use strict';
 
 SimpleSchema.extendOptions({
-  i18n: Match.Optional(Boolean)
+  i18n: Match.Optional(Boolean),
+  i18nLabel: Match.Optional(String)
 });
 
 function clone (obj) {
@@ -46,10 +47,23 @@ var originAttachSchema = Mongo.Collection.prototype.attachSchema,
 
         field.label = ' ';
         field.type = Object;
-        field.optional = origField.optional || false;
+        field.optional = true;
         delete field.autoform;
         field.autoform = {
           type: 'i18nObject'
+        };
+        field.autoValue = function () {
+          if (this.value) {
+            return this.value;
+          }
+
+          var self = this, vals = [];
+
+          _.each(Meteor.settings.public.langs, function (lang) {
+            vals.push(!self.field(key + '.' + lang).value);
+          });
+
+          return _.all(vals) ? {} : void 0;
         };
       });
 
