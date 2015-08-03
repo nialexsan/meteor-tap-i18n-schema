@@ -43,6 +43,9 @@ var originAttachSchema = Mongo.Collection.prototype.attachSchema,
 
         lodash.each(langs, function (lang, index) {
           i18nSchema[key + '.' + lang] = clone(origField);
+          if (lang !== 'ua') {
+            i18nSchema[key + '.' + lang].optional = true;
+          }
         });
 
         field.label = ' ';
