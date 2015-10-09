@@ -14,7 +14,7 @@ Package.onUse(function (api) {
     'underscore',
     'check@1.0.0',
     'tap:i18n@1.4.1',
-    'tap:i18n-db@0.4.2',
+    'tap:i18n-db@0.4.0',
     'aldeed:collection2@2.3.2',
     'stevezhu:lodash@3.9.3'
   ], both);
