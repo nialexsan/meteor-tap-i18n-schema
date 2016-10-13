@@ -3,9 +3,7 @@ Simple package to provide connection between tap:i18n-db and aldeed:collection2 
 
 ### Instalation
 
-In your Meteor app directory, enter:
-
-`meteor add ansyg:tap-i18n-schema`
+In your Meteor app directory put it into `packages/` folder
 
 ### Example
 
